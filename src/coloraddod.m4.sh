@@ -19,15 +19,6 @@ declare -Ar LOG_LEVELS=(
     [[50]]="CRITICAL"
 )
 
-declare -ar SUBSCRIPTIONS=(
-    "node_flag"
-    "node_focus"
-    "node_remove"
-    "node_swap"
-    "node_transfer"
-)
-
-
 array_contains() {
     local needle="$1"
     shift
@@ -314,8 +305,14 @@ init() {
         return 1
     fi
 
-    trap cleanup EXIT SIGINT SIGTERM
-    
+    subscriptions=(
+        "node_flag"
+        "node_focus"
+        "node_remove"
+        "node_swap"
+        "node_transfer"
+    )   
+
     flags=("marked" "urgent" "sticky" "private" "locked")
 
     declare -A border_colors=(
@@ -325,6 +322,8 @@ init() {
         [["marked"]]="a6e3a1"
         [["sticky"]]="fab387"
     )
+
+    trap cleanup EXIT SIGINT SIGTERM
     
     recolor_borders
 
@@ -332,7 +331,7 @@ init() {
     
     logging 20 "Event handling started"
 
-    bspc subscribe "${SUBSCRIPTIONS[[@]]}" | while read line; do
+    bspc subscribe "${subscriptions[[@]]}" | while read line; do
         handle_event $line
     done
 
