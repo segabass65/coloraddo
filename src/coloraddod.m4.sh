@@ -108,9 +108,15 @@ recolor_borders() {
     local node_id
     local node_top_flag
 
-    border_colors[["active"]]="$(bspc config active_border_color | tr -d "#")"
-    border_colors[["focused"]]="$(bspc config focused_border_color | tr -d "#")"
-    border_colors[["normal"]]="$(bspc config normal_border_color| tr -d "#")"
+    border_colors[["active"]]="$(
+        bspc config active_border_color | tr -d "#"
+    )"
+    border_colors[["focused"]]="$(
+        bspc config focused_border_color | tr -d "#"
+    )"
+    border_colors[["normal"]]="$(
+        bspc config normal_border_color| tr -d "#"
+    )"
 
     mapfile -t locked_node_ids < <(bspc query -N -n .locked)
     mapfile -t marked_node_ids < <(bspc query -N -n .marked)
