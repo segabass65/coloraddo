@@ -32,10 +32,16 @@ array_contains() {
     return 1
 }
 
+is_valid_log_level_id() {
+    local level_id="$1"
+
+    (( level_id >= _arg_log_level || level_id == 50 ))
+}
+
 logging() {
     local level_id="$1"
 
-    if (( level_id < _arg_log_level && _arg_log_level <= 50 )); then
+    if ! is_valid_log_level_id "$level_id"; then
         return 1
     fi
 
@@ -49,7 +55,7 @@ logging() {
 logging_node() {
     local level_id="$1"
 
-    if (( $level_id < $_arg_log_level )); then
+    if ! is_valid_log_level_id "$level_id"; then
         return 1
     fi
 
@@ -300,6 +306,11 @@ init() {
 
     elif ! command -v chwb > /dev/null; then
         logging 50 "'chwb' not found (part of 'wmutils')"
+
+        return 1
+
+    elif ! command -v xtitle > /dev/null; then
+        logging 50 "'xtitle' not found"
 
         return 1
 
