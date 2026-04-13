@@ -19,6 +19,7 @@ declare -Ar LOG_LEVELS=(
     [[50]]="CRITICAL"
 )
 
+
 array_contains() {
     local needle="$1"
     shift
@@ -305,7 +306,7 @@ init() {
         return 1
     fi
 
-    subscriptions=(
+    local subscriptions=(
         "node_flag"
         "node_focus"
         "node_remove"
@@ -324,9 +325,7 @@ init() {
     )
 
     trap cleanup EXIT SIGINT SIGTERM
-    
     recolor_borders
-
     fifo_loop &
     
     logging 20 "Event handling started"
