@@ -7,9 +7,9 @@
 
 # ARGBASH_GO
 
-FIFO_DIR_PATH="$XDG_RUNTIME_DIR/coloraddod"
-CMD_FIFO_FILE_PATH="$FIFO_DIR_PATH/cmd.fifo"
-EVT_FIFO_FILE_PATH="$FIFO_DIR_PATH/evt.fifo"
+readonly FIFO_DIR_PATH="$XDG_RUNTIME_DIR/coloraddod"
+readonly CMD_FIFO_FILE_PATH="$FIFO_DIR_PATH/cmd.fifo"
+readonly EVT_FIFO_FILE_PATH="$FIFO_DIR_PATH/evt.fifo"
 
 declare -Ar LOG_LEVELS=(
     [[10]]="DEBUG"
@@ -32,6 +32,12 @@ array_contains() {
     return 1
 }
 
+is_hex_color() {
+    local color="$1"
+
+    [[[ "$color" =~ ^#?([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$ ]]]
+}
+
 is_valid_log_level_id() {
     local level_id="$1"
 
@@ -50,6 +56,16 @@ logging() {
     local level_name="${LOG_LEVELS[[$level_id]]}"
 
     printf '[[%(%T)T]] [[%s]]: %s\n' -1 "$level_name" "$message"
+}
+
+write_event() {
+    local func="$1"
+    shift
+    local args="$@"
+
+    exec 4> "$EVT_FIFO_FILE_PATH"
+    $func $args >&4
+    exec 4>&-
 }
 
 logging_node() {
@@ -147,10 +163,10 @@ recolor_borders() {
     done
 }
 
-handle_event() {
-    local event="$1"
+handle_command() {
+    local command="$1"
 
-    case "$event" in
+    case "$command" in
         "node_focus")
             local node_id="$4"
 
@@ -252,45 +268,60 @@ handle_event() {
                 fi
             done
         ;;
-    esac
-}
 
-is_hex_color() {
-    local color="$1"
+        "control")
+            local action="$2"
 
-    [[[ "$color" =~ ^#?([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$ ]]]
-}
+            case "$action" in
+                "show")
+                    local var_name="$3"
 
-handle_command() {
-    local command="$1"
+                    if [[[ "$var_name" == "_"* ]]]; then
+                        write_event "echo" \
+                            "Error: Variable '$var_name' is private."
 
-    case "$command" in
-        "locked_border_color")
-            echo 1
-            local color="$2"
+                        return 1
+                    fi
 
-            if is_hex_color "$color"; then
-                echo 1
-                border_colors[["locked"]]="${color#\#}"
+                    local type="$(declare -p "$var_name" 2> /dev/null)"
 
-                echo ${border_colors[["locked"]]}
-            fi
+                    if [[[ -z "$type" ]]]; then
+                        write_event "echo" \
+                            "Error: Variable '$var_name' is not set."
+
+                        return 1
+                    fi
+
+                    write_event "echo" "$type"
+                ;;
+                
+                "border_colors")
+                    local border="$3"
+                    local color="$4"
+
+                    if ! is_hex_color "$color"; then
+                        write_event "echo" \
+                            "Error: Color '$color' is not hex color."
+
+                        return 1
+                    fi
+
+                    border_colors[["$border"]]="${color#\#}"
+                    write_event "printf" '%s'
+                ;;
+
+                *)
+                    write_event "echo" \
+                        "Error: Action '$action' is not handled."
+                ;;
+            esac
         ;;
     esac
 }
 
-fifo_loop() {
-    mkdir -p "$FIFO_DIR_PATH"
-    [[ -p "$CMD_FIFO_FILE_PATH" ]] || mkfifo "$CMD_FIFO_FILE_PATH"
-    [[ -p "$EVT_FIFO_FILE_PATH" ]] || mkfifo "$EVT_FIFO_FILE_PATH"
-
-    while read -r cmd arg; do
-        echo $cmd $arg
-        handle_command "$cmd" "$arg"
-    done < "$CMD_FIFO_FILE_PATH"
-}
-
 cleanup() {
+    exec 3>&-
+
     rm -f "$CMD_FIFO_FILE_PATH" "$EVT_FIFO_FILE_PATH"
     rmdir "$FIFO_DIR_PATH" 2> /dev/null
 
@@ -323,14 +354,6 @@ init() {
         return 1
     fi
 
-    local subscriptions=(
-        "node_flag"
-        "node_focus"
-        "node_remove"
-        "node_swap"
-        "node_transfer"
-    )   
-
     flags=("marked" "urgent" "sticky" "private" "locked")
 
     declare -A border_colors=(
@@ -343,15 +366,28 @@ init() {
 
     trap cleanup EXIT SIGINT SIGTERM
     recolor_borders
-    fifo_loop &
-    
-    logging 20 "Event handling started"
 
-    bspc subscribe "${subscriptions[[@]]}" | while read line; do
-        handle_event $line
+    mkdir -p "$FIFO_DIR_PATH"
+    [[ -p "$CMD_FIFO_FILE_PATH" ]] || mkfifo "$CMD_FIFO_FILE_PATH"
+    [[ -p "$EVT_FIFO_FILE_PATH" ]] || mkfifo "$EVT_FIFO_FILE_PATH"
+
+    exec 3<> "$CMD_FIFO_FILE_PATH"
+
+    bspc subscribe \
+        "node_flag" \
+        "node_focus" \
+        "node_remove" \
+        "node_swap" \
+        "node_transfer" \
+    >&3 &
+
+    logging 20 "Command handling started"
+    
+    while read -u 3 -r line; do
+        handle_command $line
     done
 
-    logging 20 "Event handling stopped"
+    logging 20 "Command handling stopped"
 }
 
 init
