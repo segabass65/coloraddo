@@ -2,5 +2,7 @@
   nativeBuildInputs = with pkgs; [
     argbash
     gnumake
+    wmutils-core
+    xtitle
   ];
 }
