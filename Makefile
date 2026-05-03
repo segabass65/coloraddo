@@ -25,18 +25,18 @@ build: prepare
 install: build
 	install -D -m 755 \
 		"$(BUILD_DIR)/coloraddod" \
-		"$(DESTDIR)$(PREFIX)/bin/coloraddod"
+		"$(DESTDIR)/$(PREFIX)/bin/coloraddod"
 
 	install -D -m 755 \
 		"$(BUILD_DIR)/coloraddoctl" \
-		"$(DESTDIR)$(PREFIX)/bin/coloraddoctl"
+		"$(DESTDIR)/$(PREFIX)/bin/coloraddoctl"
 
 uninstall:
-	rm -f "$(DESTDIR)$(PREFIX)/bin/coloraddod"
-	rm -f "$(DESTDIR)$(PREFIX)/bin/coloraddoctl"
+	rm -f "$(DESTDIR)/$(PREFIX)/bin/coloraddod"
+	rm -f "$(DESTDIR)/$(PREFIX)/bin/coloraddoctl"
 
 package:
-	@$(MAKE) install DESTDIR="dist" PREFIX="/usr"
+	@$(MAKE) install DESTDIR="dist" PREFIX="usr"
 	@fpm \
 		--description "Changing border colors depending on bspwm node flags" \
 		--license MIT \
