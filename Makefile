@@ -1,6 +1,7 @@
 BUILD_DIR = build
 DIST_DIR = dist
 MAINTAINER ?= segabass65 <segabass65@proton.me>
+PKG_TYPE ?= deb
 PREFIX ?= /usr/local
 SRC_DIR = src
 
@@ -36,7 +37,7 @@ uninstall:
 	rm -f "$(DESTDIR)/$(PREFIX)/bin/coloraddoctl"
 
 package:
-	@$(MAKE) install DESTDIR="dist" PREFIX="usr"
+	@$(MAKE) install DESTDIR="$(DIST_DIR)" PREFIX=usr
 	@fpm \
 		--description "Changing border colors depending on bspwm node flags" \
 		--license MIT \
@@ -47,9 +48,14 @@ package:
 		-f \
 		-m "$(MAINTAINER)" \
 		-n coloraddo \
-		-p packages/ \
+		-p packages \
 		-s dir \
-		-t deb \
+		-t "$(PKG_TYPE)" \
 		-v 1.0 \
 		-x .gitignore \
 		.
+
+release:
+	@$(MAKE) package
+	@$(MAKE) package PKG_TYPE=pacman
+	@$(MAKE) package PKG_TYPE=rpm

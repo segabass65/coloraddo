@@ -3,6 +3,8 @@
     argbash
     fpm
     gnumake
+    libarchive
+    rpm
     wmutils-core
     xtitle
   ];
