@@ -336,7 +336,7 @@ init() {
         return 1
 
     elif ! command -v chwb > /dev/null; then
-        logging 50 "'chwb' not found (part of 'wmutils')"
+        logging 50 "'chwb' not found (part of 'wmutils-core')"
 
         return 1
 
