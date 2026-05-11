@@ -39,6 +39,7 @@ uninstall:
 package:
 	@$(MAKE) install DESTDIR="$(DIST_DIR)" PREFIX=usr
 	@fpm \
+		$(shell xargs -r -n1 printf "-d %s " < "depends/$(PKG_TYPE).txt") \
 		--description "Changing border colors depending on bspwm node flags" \
 		--license MIT \
 		--url https://github.com/segabass65/coloraddo \
