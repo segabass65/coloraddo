@@ -1,11 +1,9 @@
 { pkgs ? import <nixpkgs> {} }: pkgs.mkShell {
+  inputsFrom = [ (pkgs.callPackage ./. { inherit pkgs; }) ];
+
   nativeBuildInputs = with pkgs; [
-    argbash
     fpm
-    gnumake
     libarchive
     rpm
-    wmutils-core
-    xtitle
-  ];
+  ]; 
 }
