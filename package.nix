@@ -1,4 +1,4 @@
-{ lib, stdenv, argbash, gnumake, makeWrapper, wmutils-core, xtitle }:
+{ lib, stdenv, argbash, gnumake, makeWrapper, wmutils-core, xtitle } @ args:
   stdenv.mkDerivation {
     pname = "coloraddo";
     version = "1.0";
@@ -10,10 +10,7 @@
       makeWrapper
     ];
 
-    buildInputs = [
-      wmutils-core
-      xtitle
-    ];
+    buildInputs = import ./depends/nixpkgs.nix { inherit args; };
 
     installPhase = ''
       runHook preInstall
