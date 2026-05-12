@@ -1,5 +1,5 @@
 { lib, stdenv, argbash, gnumake, makeWrapper, wmutils-core, xtitle }:
-  stdenv.mkDerivation rec {
+  stdenv.mkDerivation {
     pname = "coloraddo";
     version = "1.0";
     src = ./.;
