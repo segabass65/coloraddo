@@ -31,6 +31,6 @@
       homepage = "https://github.com/segabass65/coloraddo";
       license = licenses.mit;
       maintainers = [ "segabass65 <segabass65@proton.me>" ]; 
-      platforms = platforms.unix;
+      platforms = platforms.linux;
     };
 }
