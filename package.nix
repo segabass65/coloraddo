@@ -1,4 +1,16 @@
-{ lib, stdenv, argbash, gnumake, makeWrapper, wmutils-core, xtitle } @ args:
+{
+  lib,
+  stdenv,
+  argbash,
+  bspwm,
+  coreutils,
+  gnumake,
+  makeWrapper,
+  procps,
+  wmutils-core,
+  xtitle
+} @ args:
+
   stdenv.mkDerivation {
     pname = "coloraddo";
     version = "1.0";
@@ -18,7 +30,9 @@
       make install DESTDIR="$out" PREFIX=
 
       wrapProgram "$out/bin/coloraddod" \
-        --prefix PATH : ${lib.makeBinPath [ xtitle wmutils-core ]}
+        --prefix PATH : ${
+          lib.makeBinPath (import ./depends/nixpkgs.nix { inherit args; })
+        }
 
       runHook postInstall
     '';

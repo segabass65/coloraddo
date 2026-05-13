@@ -5,8 +5,11 @@
     systems.url = "github:nix-systems/default-linux";
   };
 
-  outputs = { self, nixpkgs, utils, systems, ... }:
-    utils.lib.eachSystem  (import systems) (system: let
+  outputs = { self, nixpkgs, utils, systems, ... }: let
+    package = pkgs: pkgs.callPackage ./. { inherit pkgs; };
+
+  in
+    utils.lib.eachSystem (import systems) (system: let
       pkgs = import nixpkgs { inherit system; };
 
     in {
@@ -16,6 +19,47 @@
       };
       
       devShells.default = import ./shell.nix { inherit pkgs; };
-      packages.default = pkgs.callPackage ./. { inherit pkgs; };
-    });
+      packages.default = package pkgs;
+    }) // {
+      homeModules = rec {
+        coloraddo = { config, lib, pkgs, ... }: let
+          cfg = config.services.coloraddod;
+
+        in { 
+          options.services.coloraddod = {
+            enable = lib.mkEnableOption "Whether to enable Coloraddo daemon.";
+
+            package = lib.mkOption {
+              type = lib.types.package;
+              default = package pkgs;
+              description = "The coloraddo package to use.";
+            };
+          };
+
+          config = lib.mkIf cfg.enable {
+            home.packages = [ cfg.package ];
+
+            systemd.user.services.coloraddod = {
+              Unit = {
+                Description = "Coloraddo daemon";
+                After = [ "graphical-session.target" ];
+                PartOf = [ "graphical-session.target" ];
+              };
+
+              Service = {
+                ExecStart = "${cfg.package}/bin/coloraddod";
+                Restart = "always";
+                RestartSec = 3;
+              };
+
+              Install = {
+                WantedBy = [ "graphical-session.target" ];
+              };
+            };
+          };
+        };
+
+        default = coloraddo;
+      };
+    };
 }
