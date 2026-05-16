@@ -21,8 +21,8 @@ prepare: clean
 	> /dev/null
 
 build: prepare
-	@argbash "$(SRC_DIR)/coloraddod.m4.sh" -o "$(BUILD_DIR)/coloraddod"
-	@argbash "$(SRC_DIR)/coloraddoctl.m4.sh" -o "$(BUILD_DIR)/coloraddoctl"
+	@argbash "$(SRC_DIR)/coloraddod.m4" -o "$(BUILD_DIR)/coloraddod"
+	@argbash "$(SRC_DIR)/coloraddoctl.m4" -o "$(BUILD_DIR)/coloraddoctl"
 
 install: build
 	install -D -m 755 \
