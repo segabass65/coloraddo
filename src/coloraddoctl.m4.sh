@@ -2,9 +2,7 @@
 
 # ARG_HELP([Utility to control the coloraddod daemon.])
 
-# ARG_POSITIONAL_SINGLE([action], [Operation to perform])
-# ARG_POSITIONAL_SINGLE([key], [The name of the key or variable])
-# ARG_POSITIONAL_SINGLE([value], [The value to be set], [null])
+# ARG_POSITIONAL_INF([rest],[Any arguments],[0])
 
 # ARGBASH_GO
 
