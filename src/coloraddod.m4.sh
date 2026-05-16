@@ -310,6 +310,11 @@ handle_command() {
                     write_event "printf" '%s'
                 ;;
 
+                "recolor_borders")
+                    recolor_borders
+                    write_event "printf" '%s'
+                ;;
+
                 *)
                     write_event "echo" \
                         "Error: Action '$action' is not handled."
