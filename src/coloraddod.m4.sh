@@ -345,6 +345,11 @@ init() {
 
         return 1
 
+    elif ! command -v ls > /dev/null; then
+        logging 50 "'coreutils' or 'busybox' not found"
+
+        return 1
+
     elif ((
         _arg_log_level < 10 || _arg_log_level > 50 || _arg_log_level % 10 != 0
     )); then
