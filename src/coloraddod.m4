@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# ARG_HELP([Changing border colors depending on bspwm node flags])
+# ARG_HELP([Changing border colors depending on bspwm node flags.])
 
-# ARG_OPTIONAL_BOOLEAN([names], [n], [Log names instead of IDs], [off])
-# ARG_OPTIONAL_SINGLE([log-level], [l], [Minimum logging level], [20])
+# ARG_OPTIONAL_BOOLEAN([names],[n],[Log names instead of IDs],[off])
+# ARG_OPTIONAL_SINGLE([log-level],[l],[Minimum logging level],[20])
 
 # ARGBASH_GO
 
