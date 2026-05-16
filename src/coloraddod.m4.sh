@@ -357,11 +357,11 @@ init() {
     flags=("marked" "urgent" "sticky" "private" "locked")
 
     declare -A border_colors=(
-        [["locked"]]="f38ba8"
-        [["private"]]="fab387"
-        [["urgent"]]="74c7ec"
-        [["marked"]]="a6e3a1"
-        [["sticky"]]="fab387"
+        [["locked"]]="ff0000"
+        [["private"]]="ffff00"
+        [["urgent"]]="0000ff"
+        [["marked"]]="00ff00"
+        [["sticky"]]="ffff00"
     )
 
     trap cleanup EXIT SIGINT SIGTERM
