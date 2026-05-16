@@ -153,9 +153,7 @@ recolor_borders() {
         node_top_flag="$(get_top_flag "$node_id")"
 
         if [[[ "$node_id" != "$focused_node_id" ]]]; then
-            if [[[ "$node_top_flag" != "normal" ]]]; then
-                recolor_border "$node_top_flag" "$node_id"
-            fi
+            recolor_border "$node_top_flag" "$node_id"
 
         else
             focused_node_top_flag="$node_top_flag"
