@@ -11,6 +11,7 @@ all: build
 clean:
 	@rm -rf "$(BUILD_DIR)"
 	@rm -rf "$(DIST_DIR)"
+	@rm -f result
 
 prepare: clean
 	@mkdir -p "$(BUILD_DIR)" "$(DIST_DIR)"
