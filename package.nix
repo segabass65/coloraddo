@@ -9,7 +9,7 @@
   procps,
   wmutils-core,
   xtitle
-} @ args:
+}:
 
   stdenv.mkDerivation {
     pname = "coloraddo";
@@ -22,7 +22,13 @@
       makeWrapper
     ];
 
-    buildInputs = import ./depends/nixpkgs.nix { inherit args; };
+    buildInputs = [
+      bspwm
+      coreutils
+      procps
+      wmutils-core
+      xtitle
+    ];
 
     installPhase = ''
       runHook preInstall
@@ -30,9 +36,19 @@
       make install DESTDIR="$out" PREFIX=
 
       wrapProgram "$out/bin/coloraddod" \
-        --prefix PATH : ${
-          lib.makeBinPath (import ./depends/nixpkgs.nix { inherit args; })
-        }
+        --prefix PATH : ${ lib.makeBinPath [
+          bspwm
+          coreutils
+          procps
+          wmutils-core
+          xtitle
+        ]}
+
+      wrapProgram "$out/bin/coloraddoctl" \
+        --prefix PATH : ${ lib.makeBinPath [
+          coreutils
+          procps
+        ]}
 
       runHook postInstall
     '';
