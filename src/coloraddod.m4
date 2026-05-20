@@ -293,19 +293,25 @@ handle_command() {
                     write_event "echo" "$type"
                 ;;
                 
-                "border_colors")
-                    local border="$3"
-                    local color="$4"
+                "config")
+                    local parameter="$3"
 
-                    if ! is_hex_color "$color"; then
-                        write_event "echo" \
-                            "Error: Color '$color' is not hex color."
+                    case "$parameter" in
+                        "border_colors")
+                            local border="$4"
+                            local color="$5"
 
-                        return 1
-                    fi
+                            if ! is_hex_color "$color"; then
+                                write_event "echo" \
+                                    "Error: Color '$color' is not hex color."
 
-                    border_colors[["$border"]]="${color#\#}"
-                    write_event "printf" '%s'
+                                return 1
+                            fi
+
+                            border_colors[["$border"]]="${color#\#}"
+                            write_event "printf" '%s'
+                        ;;
+                    esac
                 ;;
 
                 "recolor_borders")
