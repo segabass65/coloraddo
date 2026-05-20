@@ -35,9 +35,9 @@ while read -u 4 -r line; do
     fi
 
     if (( exit_code )); then
-        echo "$line" >&2
+        printf '%s\n' "$line" >&2
     else
-        echo "$line"
+        printf '%s\n' "$line"
     fi
 done
 
