@@ -1,5 +1,22 @@
 {
   "nodes": {
+    "config-generator": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1779665698,
+        "narHash": "sha256-o7eWZlwO9k7oBHKxmtvnZchjxp/FiQ9WkgGJO9vZTfQ=",
+        "path": "/repos/segabass65/nix-config-generator",
+        "type": "path"
+      },
+      "original": {
+        "path": "/repos/segabass65/nix-config-generator",
+        "type": "path"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1778443072,
@@ -18,6 +35,7 @@
     },
     "root": {
       "inputs": {
+        "config-generator": "config-generator",
         "nixpkgs": "nixpkgs",
         "systems": "systems",
         "utils": "utils"

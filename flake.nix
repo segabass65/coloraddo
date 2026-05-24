@@ -3,9 +3,15 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     utils.url = "github:numtide/flake-utils";
     systems.url = "github:nix-systems/default-linux";
+
+    config-generator = {
+      # url = "github:segabass65/nix-config-generator";
+      url = "path:/repos/segabass65/nix-config-generator";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, utils, systems, ... }: let
+  outputs = { self, config-generator, nixpkgs, utils, systems, ... }: let
     package = pkgs: pkgs.callPackage ./. { inherit pkgs; };
 
   in
@@ -34,6 +40,20 @@
               default = package pkgs;
               description = "The coloraddo package to use.";
             };
+
+            settings = lib.mkOption {
+              type = lib.types.attrsOf lib.types.anything;
+              default = { };
+              description = "General settings given to coloraddoctl config.";
+            };
+
+            extraConfig = lib.mkOption {
+              type = lib.types.str;
+              default = "";
+              description =
+                "Additional shell commands to be run "
+                "at the end of the config file.";
+            };
           };
 
           config = lib.mkIf cfg.enable {
@@ -56,6 +76,11 @@
                 WantedBy = [ "graphical-session.target" ];
               };
             };
+
+            xsession.windowManager.bspwm.extraConfig =
+              config-generator.lib.toColoraddod {
+                inherit (cfg) settings extraConfig;
+              };
           };
         };
 
