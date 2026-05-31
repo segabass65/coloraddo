@@ -7,23 +7,23 @@
         ]
       },
       "locked": {
-        "lastModified": 1779665698,
-        "narHash": "sha256-o7eWZlwO9k7oBHKxmtvnZchjxp/FiQ9WkgGJO9vZTfQ=",
-        "path": "/repos/segabass65/nix-config-generator",
+        "lastModified": 1780265725,
+        "narHash": "sha256-PUQuPXucx9vFb+P3p+jnmxUKPsV6BLBQYM4oS0YqVCQ=",
+        "path": "/repos/segabass65/config-generator",
         "type": "path"
       },
       "original": {
-        "path": "/repos/segabass65/nix-config-generator",
+        "path": "/repos/segabass65/config-generator",
         "type": "path"
       }
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1778443072,
-        "narHash": "sha256-zi7/fsqM/kFdNuED//4WOCUtezGtKKqRNORjMvfwjnA=",
+        "lastModified": 1779560665,
+        "narHash": "sha256-tpyBcxPpcQb8ukyNF7DoCwfSY3VPsxHoYwj00Cayv5o=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "da5ad661ba4e5ef59ba743f0d112cbc30e474f32",
+        "rev": "64c08a7ca051951c8eae34e3e3cb1e202fe36786",
         "type": "github"
       },
       "original": {

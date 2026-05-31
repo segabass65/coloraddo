@@ -5,8 +5,8 @@
     systems.url = "github:nix-systems/default-linux";
 
     config-generator = {
-      # url = "github:segabass65/nix-config-generator";
-      url = "path:/repos/segabass65/nix-config-generator";
+      # url = "github:segabass65/config-generator";
+      url = "path:/repos/segabass65/config-generator";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
